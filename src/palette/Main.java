@@ -24,9 +24,16 @@ public class Main{
         BufferedImage input_image = process_img.convFileToImage(input_image_filename);
         int[][] input_image_rgb_array = process_img.convImageToArray(input_image);
 
+        /*
+        We'll convert the RGB matrix to a matrix with only the Hue component
+         */
 //        HSI[][] input_image_hsi_array = process_img.convRGBArrayToHSIArray(input_image_rgb_array);
+//        double[][] input_image_hue_array = process_img.convRGBToHueArray(input_image_rgb_array);
+		double[][]input_image_hue_array = process_img.convRGBToHueArray_RaviImplementation(input_image_rgb_array);
+
 
         myColor[][] color_array = process_img.convRGBArrayToMyColorArray(input_image_rgb_array);
+
 
         ConnectedColorComponent C = new ConnectedColorComponent();
         C.initialize(input_image_rgb_array, 50);
@@ -34,7 +41,7 @@ public class Main{
         //	Name pixels by labels according to nearby labels
 
         int [][] CCC_Matrix = C.labelColouredComponents(50);
-        Utility.printMatrix(C.getL());
+//        Utility.printMatrix(C.getL());
 
         // Try initializing myColor matrix
 //		C.initializeMyColor(color_array, 50);
@@ -48,8 +55,9 @@ public class Main{
         System.out.println("Dimension 2:"+input_image_rgb_array[0].length);
 
 
-        rgb_processor.listClosestPaletteColors(color_array, std_palette, 50);
-        std_palette.putColorCountTable();
+//        rgb_processor.listClosestPaletteColors(color_array, std_palette, 50);
+//        std_palette.putColorCountTable();
+
 
         System.out.println("End Main");
     }

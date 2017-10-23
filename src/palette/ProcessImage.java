@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.rmi.CORBA.Util;
+
 /**
  *
  * @author parnika
@@ -65,5 +67,109 @@ public class ProcessImage {
 		}
 
 		return colorArray;
+	}
+
+	/*
+	Convert RGB matrix to only Hue component matrix
+	 */
+	public double[][] convRGBToHueArray(int input_array[][]){
+
+		int dimension_1 = input_array.length;
+		int dimension_2 = input_array[0].length;
+
+		int red, green, blue;
+		double n, d;
+
+		//Return array
+		double[][] hue_array = new double[dimension_1][dimension_2];
+
+		for(int i=0; i<dimension_1; i++) {
+			for (int j = 0; j < dimension_2; j++) {
+
+				red = (input_array[i][j] >> 16) & 0xff;
+				green = (input_array[i][j] >> 8) & 0xff;
+				blue = (input_array[i][j]) & 0xff;
+
+
+				n=(0.5)*((red-green)+(red-blue));
+				d=Math.pow((Math.pow(red-green,2)+((red-blue)*(green-blue))),0.5);
+
+				hue_array[i][j] = Math.acos(n/(d+0.000001)) * (180/Math.PI);
+
+				//Debugging sout
+				System.out.println("\n("+i+","+j+")\nInputRGB:\t"+input_array[i][j]+"\nRed:\t"+red+"\nGreen:\t"+green+"\nBlue:\t"+blue+"\nn:\t"+n+"\nd:\t"+d+"\nacosd:\t"+hue_array[i][j]);
+
+				if(blue>green) {
+					System.out.println("\t\t\t\t\t\t\t\tBlue>Green");
+					hue_array[i][j] = 360 - hue_array[i][j];
+				}
+
+				hue_array[i][j] = hue_array[i][j] / 360.0;
+
+				//Debugging sout
+				System.out.println("Final Hue Array:\t"+hue_array[i][j]);
+
+			}
+		}
+
+		return hue_array;
+	}
+
+	public double[][] convRGBToHueArray_RaviImplementation(int input_array[][]){
+
+		int dimension_1 = input_array.length;
+		int dimension_2 = input_array[0].length;
+
+		double red, green, blue, val_max, val_min, delta, n, d;
+
+		//Return array
+		double[][] hue_array = new double[dimension_1][dimension_2];
+
+		for(int i=0; i<dimension_1; i++) {
+			for (int j = 0; j < dimension_2; j++) {
+
+				red = ((input_array[i][j] >> 16) & 0xff) / 255.0;
+				green = ((input_array[i][j] >> 8) & 0xff) / 255.0;
+				blue = ((input_array[i][j]) & 0xff) / 255.0;
+
+				val_max = Utility.val_max(red, green, blue);
+				val_min = Utility.val_min(red, green, blue);
+
+				delta = val_max - val_min;
+
+				if(delta == 0)
+					hue_array[i][j] = 0;
+				else {
+
+					switch (Utility.max(red, green, blue)) {
+						case 1:
+							hue_array[i][j] = (green - blue) / delta;
+							if(hue_array[i][j] < 0){	hue_array[i][j] += 6.0;	}
+
+							break;
+						case 2:
+							hue_array[i][j] = (blue - red) / delta + 2;
+							break;
+						case 3:
+							hue_array[i][j] = (red - green) / delta + 4;
+							break;
+						default:
+							System.err.println("(" + i + "," + j + ")\t\tNot a valid color switch");
+							hue_array[i][j] = 0;
+					}
+				}
+
+				//Debugging sout
+				System.out.println("\n("+i+","+j+")\nInputRGB:\t"+input_array[i][j]+"\nRed:\t"+red+"\nGreen:\t"+green+"\nBlue:\t"+blue+"\ndelta:\t"+delta+"\nval_max:\t"+val_max+"\nacosd:\t"+hue_array[i][j]);
+
+				hue_array[i][j] *= 60.0;
+
+				//Debugging sout
+				System.out.println("Final Hue Array:\t"+hue_array[i][j]);
+
+			}
+		}
+
+		return hue_array;
 	}
 }
