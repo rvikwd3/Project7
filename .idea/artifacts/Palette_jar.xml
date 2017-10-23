@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="Palette:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Palette_jar</output-path>
-    <root id="archive" name="Palette.jar">
-      <element id="module-output" name="Palette" />
-      <element id="library" level="module" name="Palette_SRC" module-name="Palette" />
-    </root>
-  </artifact>
-</component>
