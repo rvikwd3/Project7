@@ -20,7 +20,7 @@ public class ConnectedColorComponent {
 	}
 
 	private int[][] L;
-	public int[][] getL() {
+	int[][] getL() {
 		return L;
 	}
 
@@ -32,8 +32,8 @@ public class ConnectedColorComponent {
 	/*
 	Tried labelling individual pixels with colors
 	 */
-	private myColor[][] P_my_color;
-	public myColor[][] getP_my_color(){ return P_my_color; }
+//	private myColor[][] P_my_color;
+//	public myColor[][] getP_my_color(){ return P_my_color; }
 
 	private double max_distance;
 	private int maxLabel;
@@ -43,15 +43,15 @@ public class ConnectedColorComponent {
 	
 	private int M;
 	private int N;
-	double  threshold;
-	Stack <StackElement> segmentStack;
+	private double  threshold;
+	private Stack <StackElement> segmentStack;
 
 	public void ConnectedColorComponent()
 	{
 		L=null;
 		P=null;
 
-		P_my_color = null;
+//		P_my_color = null;
 
 		segmentStack=null;
 		maxLabel = 0;
@@ -59,178 +59,178 @@ public class ConnectedColorComponent {
 		threshold = 0.0;
 	}
 
-	public void initializeMyColor(myColor [][] matrix, double percent){
-		N = matrix.length;
-		M = matrix[0].length;
-		threshold = percent;
-
-		max_distance = Math.sqrt(Math.pow(255,2)*3);
-
-		if (M > 0 && N > 0){
-			L = new int[N][M];
-			P = new int[N][M];
-			P_my_color = new myColor[N][M];
-
-			for(int i=0; i<N; i++){
-				for(int j=0; j<M; j++){
-
-					P[i][j] = 1;
-					L[i][j] = 0;
-
-					P_my_color[i][j] = matrix[i][j];
-				}
-				segmentStack = new Stack<StackElement>();
-			}
-
-		}
-	}
-
-	public int[][] labelMyColorComponents(double percent){
-		if (L!=null){
-			int label = 0;
-
-			for (int y=0; y<N; y++){
-				for (int x=0; x<M; x++){
-
-					if (P[y][x] != -1) {
-						++label;
-						fill_my_color(x, y, label, percent);
-						System.err.println("Fill_my_color iteration label:\t"+label);
-					}
-				}
-			}
-			maxLabel = label;
-		}
-		return L;
-	}
-
-	private void fill_my_color (int x, int y, int label, double percent)
-	{
-		if (P != null)
-		{
-
-			int seed = P[y][x];
-
-			System.err.print("("+x+","+y+")\t");
-
-			myColor seed_my_color = P_my_color[y][x];
-
-			push(y, x, x, 1);
-			push(y + 1, x, x, -1);
-
-
-			while (!segmentStack.isEmpty())
-			{
-				int x1,x2,dy,start;
-				StackElement item = pop();
-				y=item.y+item.dy;
-				x1 = item.xl;
-				x2 = item.xr;
-				dy = item.dy;
-				x = x1;
-				//while (x >= 0 && P[y][x] == seed)
-				while (x >= 0 && isSameMyColor(P_my_color[y][x], seed_my_color, percent))
-				{
-					L[y][x] = label;
-					P[y][x] = -1;
-
-					System.err.println("("+x+","+y+") is labelled as "+L[y][x]);
-
-					P_my_color[y][x] = seed_my_color;
-
-					x--;
-				}
-
-				if (x < x1)
-				{
-					start = x + 1;
-					if (start < x1)
-					{
-						push(y, start, x1-1, -dy);
-					}
-					x = x1 + 1 ;
-					do
-					{
-						//while (x < M && P[y][x] == seed)
-						while (x < M && isSameMyColor(P_my_color[y][x], seed_my_color, percent))
-						{
-							L[y][x] = label;
-							P[y][x] = -1;
-
-							System.err.println("("+x+","+y+") is labelled as "+L[y][x]);
-
-							P_my_color[y][x] = seed_my_color;
-
-							x++;
-						}
-						push(y,start,x-1,dy);
-
-						if (x > x2+1) {
-							push(y,x2+1,x-1,-dy);
-						}
-
-						x++;
-						//while (x <= x2 && P[y][x] != seed)
-						while (x <= x2 && !isSameMyColor(P_my_color[y][x], seed_my_color, percent))
-							x++;
-						start = x;
-					}
-					while (x <= x2);
-				}
-				else
-				{
-					if(P[y][x]==-1)
-						System.err.println("("+x+","+y+") is previously labelled as "+L[y][x]);
-
-					x++;
-
-					//while (x <= x2 && P[y][x] != seed)
-					while (x <= x2 && !isSameMyColor(P_my_color[y][x], seed_my_color, percent))
-						x++;
-					start = x;
-					while (x <= x2)
-					{
-						//while (x < M && P[y][x] == seed)
-						while (x < M && isSameMyColor(P_my_color[y][x], seed_my_color, percent))
-						{
-							L[y][x] = label;
-							P[y][x] = -1;
-
-							System.err.println("("+x+","+y+")\t is -1\t\tLabel: "+label);
-
-							P_my_color[y][x] = seed_my_color;
-
-							x++;
-						}
-						push(y,start,x-1,dy);
-
-						if (x > x2+1) {
-							push(y,x2+1,x-1,-dy);
-						}
-
-						x++;
-						//while (x <= x2 && P[y][x] != seed)
-						while (x <= x2 && !isSameMyColor(P_my_color[y][x], seed_my_color, percent))
-							x++;
-						start = x;
-					}
-				}
-			}
-		}
-	}
-
-	private boolean isSameMyColor (myColor rgb1, myColor rgb2, double threshold){
-		double red_distance, green_distance, blue_distance, distance;
-
-		red_distance = Math.pow(rgb1.red - rgb2.red, 2);
-		green_distance = Math.pow(rgb1.green - rgb2.green, 2);
-		blue_distance = Math.pow(rgb1.blue - rgb2.blue, 2);
-
-		distance = Math.sqrt(red_distance + green_distance + blue_distance);
-
-		double percent = 100.0 * distance/max_distance;
-		return (percent<=threshold?true:false);
-	}
+//	public void initializeMyColor(myColor [][] matrix, double percent){
+//		N = matrix.length;
+//		M = matrix[0].length;
+//		threshold = percent;
+//
+//		max_distance = Math.sqrt(Math.pow(255,2)*3);
+//
+//		if (M > 0 && N > 0){
+//			L = new int[N][M];
+//			P = new int[N][M];
+//			P_my_color = new myColor[N][M];
+//
+//			for(int i=0; i<N; i++){
+//				for(int j=0; j<M; j++){
+//
+//					P[i][j] = 1;
+//					L[i][j] = 0;
+//
+//					P_my_color[i][j] = matrix[i][j];
+//				}
+//				segmentStack = new Stack<StackElement>();
+//			}
+//
+//		}
+//	}
+//
+//	public int[][] labelMyColorComponents(double percent){
+//		if (L!=null){
+//			int label = 0;
+//
+//			for (int y=0; y<N; y++){
+//				for (int x=0; x<M; x++){
+//
+//					if (P[y][x] != -1) {
+//						++label;
+//						fill_my_color(x, y, label, percent);
+//						System.err.println("Fill_my_color iteration label:\t"+label);
+//					}
+//				}
+//			}
+//			maxLabel = label;
+//		}
+//		return L;
+//	}
+//
+//	private void fill_my_color (int x, int y, int label, double percent)
+//	{
+//		if (P != null)
+//		{
+//
+//			int seed = P[y][x];
+//
+//			System.err.print("("+x+","+y+")\t");
+//
+//			myColor seed_my_color = P_my_color[y][x];
+//
+//			push(y, x, x, 1);
+//			push(y + 1, x, x, -1);
+//
+//
+//			while (!segmentStack.isEmpty())
+//			{
+//				int x1,x2,dy,start;
+//				StackElement item = pop();
+//				y=item.y+item.dy;
+//				x1 = item.xl;
+//				x2 = item.xr;
+//				dy = item.dy;
+//				x = x1;
+//				//while (x >= 0 && P[y][x] == seed)
+//				while (x >= 0 && isSameMyColor(P_my_color[y][x], seed_my_color, percent))
+//				{
+//					L[y][x] = label;
+//					P[y][x] = -1;
+//
+//					System.err.println("("+x+","+y+") is labelled as "+L[y][x]);
+//
+//					P_my_color[y][x] = seed_my_color;
+//
+//					x--;
+//				}
+//
+//				if (x < x1)
+//				{
+//					start = x + 1;
+//					if (start < x1)
+//					{
+//						push(y, start, x1-1, -dy);
+//					}
+//					x = x1 + 1 ;
+//					do
+//					{
+//						//while (x < M && P[y][x] == seed)
+//						while (x < M && isSameMyColor(P_my_color[y][x], seed_my_color, percent))
+//						{
+//							L[y][x] = label;
+//							P[y][x] = -1;
+//
+//							System.err.println("("+x+","+y+") is labelled as "+L[y][x]);
+//
+//							P_my_color[y][x] = seed_my_color;
+//
+//							x++;
+//						}
+//						push(y,start,x-1,dy);
+//
+//						if (x > x2+1) {
+//							push(y,x2+1,x-1,-dy);
+//						}
+//
+//						x++;
+//						//while (x <= x2 && P[y][x] != seed)
+//						while (x <= x2 && !isSameMyColor(P_my_color[y][x], seed_my_color, percent))
+//							x++;
+//						start = x;
+//					}
+//					while (x <= x2);
+//				}
+//				else
+//				{
+//					if(P[y][x]==-1)
+//						System.err.println("("+x+","+y+") is previously labelled as "+L[y][x]);
+//
+//					x++;
+//
+//					//while (x <= x2 && P[y][x] != seed)
+//					while (x <= x2 && !isSameMyColor(P_my_color[y][x], seed_my_color, percent))
+//						x++;
+//					start = x;
+//					while (x <= x2)
+//					{
+//						//while (x < M && P[y][x] == seed)
+//						while (x < M && isSameMyColor(P_my_color[y][x], seed_my_color, percent))
+//						{
+//							L[y][x] = label;
+//							P[y][x] = -1;
+//
+//							System.err.println("("+x+","+y+")\t is -1\t\tLabel: "+label);
+//
+//							P_my_color[y][x] = seed_my_color;
+//
+//							x++;
+//						}
+//						push(y,start,x-1,dy);
+//
+//						if (x > x2+1) {
+//							push(y,x2+1,x-1,-dy);
+//						}
+//
+//						x++;
+//						//while (x <= x2 && P[y][x] != seed)
+//						while (x <= x2 && !isSameMyColor(P_my_color[y][x], seed_my_color, percent))
+//							x++;
+//						start = x;
+//					}
+//				}
+//			}
+//		}
+//	}
+//
+//	private boolean isSameMyColor (myColor rgb1, myColor rgb2, double threshold){
+//		double red_distance, green_distance, blue_distance, distance;
+//
+//		red_distance = Math.pow(rgb1.red - rgb2.red, 2);
+//		green_distance = Math.pow(rgb1.green - rgb2.green, 2);
+//		blue_distance = Math.pow(rgb1.blue - rgb2.blue, 2);
+//
+//		distance = Math.sqrt(red_distance + green_distance + blue_distance);
+//
+//		double percent = 100.0 * distance/max_distance;
+//		return (percent<=threshold?true:false);
+//	}
 
 	private boolean isSamePixelColour (int rgb1, int rgb2, double threshold)
 	{
@@ -251,10 +251,10 @@ public class ConnectedColorComponent {
 		double distance = Math.sqrt(seperation);
 
 		double percent = 100.0 * distance/(Math.sqrt(3 * (255 * 255) + 4 * (255 * 255) +3 * (255* 255)));
-		return (percent <= threshold ? true:false);
+		return (percent <= threshold);
 	}
 
-	public void initialize(int [][] matrix, double percent)
+	void initialize(int[][] matrix, double percent)
 	{		
 		N = matrix.length;
 		M = matrix[0].length;
@@ -392,7 +392,7 @@ public class ConnectedColorComponent {
 		}
 	}
 
-	public int[][] labelColouredComponents(double percent)
+	int[][] labelColouredComponents(double percent)
 	{				
 		if (L != null)
 		{

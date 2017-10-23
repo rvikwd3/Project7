@@ -48,7 +48,7 @@ public class Main{
         System.out.println("Dimension 2:"+input_image_rgb_array[0].length);
 
 
-         rgb_processor.listClosestPaletteColors(color_array, std_palette, 50);
+        rgb_processor.listClosestPaletteColors(color_array, std_palette, 50);
         std_palette.putColorCountTable();
 
         System.out.println("End Main");
