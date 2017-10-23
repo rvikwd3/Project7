@@ -1,4 +1,4 @@
-#Object Recognition through Color-based Graph Matching
+# Object Recognition through Color-based Graph Matching
 
 1.	Take an image
 2.	Split into sections based on color
