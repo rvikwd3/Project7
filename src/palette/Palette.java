@@ -1,14 +1,38 @@
 package palette;
 
 import java.lang.Math;
+import java.util.HashMap;
 
 class Palette {
-    palette.myColor[] color_list = new palette.myColor[3];
-    int color_count[] = new int[3];
+	HashMap<String, myColor> color_list = new HashMap<String, myColor>();
+	HashMap<String, Integer> color_count = new HashMap<String, Integer>();
+
+//    palette.myColor[] color_list = new palette.myColor[3];
+//    int color_count[] = new int[3];
 
     myColor closest_color = new myColor();
 
-    Palette() {
+    Palette(){
+		System.out.println("Initializing standard palette in HashMap");
+
+		//Set standard RGB colors as RGB objects
+		myColor color_red = new myColor("Red", 255, 0, 0);
+		myColor color_green = new myColor("Green", 0, 255, 0);
+		myColor color_blue = new myColor("Blue", 0, 0, 255);
+
+		color_list.put(color_red.color_name, color_red);
+		color_list.put(color_green.color_name, color_green);
+		color_list.put(color_blue.color_name, color_blue);
+
+		//Initialize color_count list
+		for(String key : color_list.keySet()){
+			color_count.put(key, 0);
+		}
+
+	}
+
+	//Old color_list array version
+/*    Palette() {
         System.out.println("Initializing standard palette");
 
         //Set the color_count array to 0
@@ -31,14 +55,19 @@ class Palette {
         color_list[0] = color_red;
         color_list[1] = color_green;
         color_list[2] = color_blue;
-    }
+    }*/
 
     void putPalette(){
         System.out.println("Palette:");
 
-        for(int i=0; i<color_list.length; i++){
+        //Old color_list array
+/*        for(int i=0; i<color_list.length; i++){
             color_list[i].putColor();
-        }
+        }*/
+
+		for(String key : color_list.keySet()){
+			color_list.get(key).putColor();
+		}
     }
 
     double hueDistance(double hue){
@@ -46,10 +75,10 @@ class Palette {
     	double hue_distance = 0;
     	double palette_color_hue = 0;
 
-    	for(int i=0; i<color_list.length; i++){
+    	for(String key : color_list.keySet()){
 
     		//Convert palette RGB color to Hue
-			palette_color_hue = Utility.rgb2hue((double)color_list[i].red, (double)color_list[i].green, (double)color_list[i].blue);
+			palette_color_hue = Utility.rgb2hue((double)color_list.get(key).red, (double)color_list.get(key).green, (double)color_list.get(key).blue);
 
 			//Compute absolute distance between palette color & input hue
 			hue_distance = (hue > palette_color_hue)?(hue-palette_color_hue):(palette_color_hue-hue);
@@ -57,7 +86,7 @@ class Palette {
 			//If distance is least then keep it as new minimum distance
 			if(hue_distance < minimum_distance){
 				minimum_distance = hue_distance;
-				closest_color = color_list[i];
+				closest_color = color_list.get(key);
 			}
 
 
@@ -70,14 +99,14 @@ class Palette {
         double minimum_distance = Double.MAX_VALUE;
         double color_distance = 0;
 
-        for(int i=0; i<color_list.length; i++){
+        for(String key : color_list.keySet()){
 
             //Compute RGB Distances
             int color_distance_red, color_distance_blue, color_distance_green;
 
-            color_distance_red = input_color.red - color_list[i].red;
-            color_distance_green = input_color.green - color_list[i].green;
-            color_distance_blue = input_color.blue - color_list[i].blue;
+            color_distance_red = input_color.red - color_list.get(key).red;
+            color_distance_green = input_color.green - color_list.get(key).green;
+            color_distance_blue = input_color.blue - color_list.get(key).blue;
 
             //Debug palette names/values
 //            System.out.println("\t\tColor:");
@@ -96,7 +125,7 @@ class Palette {
             //then keep it as new minimum distance
             if (color_distance < minimum_distance){
                 minimum_distance = color_distance;
-                closest_color = color_list[i];
+                closest_color = color_list.get(key);
 
                 //Debug check minimum distance
 //                System.out.println("\t\tChanged minimum distance");
@@ -106,14 +135,22 @@ class Palette {
         return minimum_distance;
     }
 
+    void resetColorCount(){
+    	//New HashMap color count reset
+		for(String key : color_count.keySet()){
+			color_count.put(key, 0);
+		}
+
+    	//Old color_count array reset
+/*		for(int i=0; i<color_list.length; i++){
+			color_count[i] = 0;
+		}*/
+	}
+
     void resetClosestColor(){
         closest_color = new myColor();
-
-        for(int i=0; i<color_list.length; i++){
-            color_count[i] = 0;
-        }
+        this.resetColorCount();
     }
-
 
     myColor hueClosestColor(double hue){
 		//Run hueDistance to re-calculate distance
@@ -123,8 +160,8 @@ class Palette {
 	}
 
 	myColor hueClosestColor(double hue, int threshold){
-		//Run hueDistance to re-calculate distance
-		//read global closest_color and return that
+    	//Overloaded for threshold
+
 		this.hueDistance(hue);
 		return closest_color;
 	}
@@ -144,28 +181,44 @@ class Palette {
     }
 
     void incrementColorCount(String inc_color_name){
-        for(int i=0; i<color_list.length; i++){
+    	//Old color_count array
+/*        for(int i=0; i<color_list.length; i++){
             if(color_list[i].color_name.equals(inc_color_name)){
                 color_count[i]++;
             }
-        }
+        }*/
+
+		//New hashmap version
+		for(String key : color_list.keySet()){
+			if(key.equals(inc_color_name)){
+				color_count.put(key, color_count.get(key)+1);
+			}
+		}
     }
 
     void decrementColorCount(String inc_color_name){
-        for(int i=0; i<color_list.length; i++){
+    	//Old color_count array version
+/*        for(int i=0; i<color_list.length; i++){
             if(color_list[i].color_name.equals(inc_color_name)){
                 color_count[i]--;
             }
-        }
+        }*/
+
+		//New hashmap version
+		for(String key : color_list.keySet()){
+			if(key.equals(inc_color_name)){
+				color_count.put(key, color_count.get(key)-1);
+			}
+		}
     }
 
     int putColorCount(String inc_color_name){
         int return_val = -1;
 
-        for(int i=0; i<color_list.length; i++) {
+        for(String key : color_list.keySet()){
 
-            if (color_list[i].color_name.equals(inc_color_name)) {
-                return_val = color_count[i];
+            if (color_list.get(key).color_name.equals(inc_color_name)) {
+                return_val = color_count.get(key);
             }
         }
 
@@ -173,20 +226,18 @@ class Palette {
     }
 
     void putColorCountTable(){
-        for(int i=0; i<color_list.length; i++){
-            System.out.print(color_list[i].color_name+":\t");
-            System.out.println(putColorCount(color_list[i].color_name));
+        for(String key : color_list.keySet()){
+            System.out.print(color_list.get(key).color_name+":\t");
+            System.out.println(putColorCount(color_list.get(key).color_name));
         }
-
-//        System.out.println("Red:\t"+std_palette.putColorCount("red"));
-//        System.out.println("Green:\t"+std_palette.putColorCount("green"));
-//        System.out.println("Blue:\t"+std_palette.putColorCount("blue"));
     }
 
     String[] putColorNames(){
-        String[] color_names = new String[color_list.length];
-        for(int i=0; i<color_names.length; i++){
-            color_names[i] = color_list[i].color_name;
+        String[] color_names = new String[color_list.size()];
+
+        int i=0;
+        for(String key : color_list.keySet()){
+            color_names[i++] = color_list.get(key).color_name;
         }
 
         return color_names;
