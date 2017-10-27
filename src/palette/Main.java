@@ -10,45 +10,52 @@ public class Main{
 
         Palette std_palette = new Palette();
 
-        myColor white = new myColor("white", 255, 255, 255);
-        //std_palette.putPalette();
+        //Adding white to standard palette
+        myColor white = new myColor("White", 255, 255, 255);
+        std_palette.addToPalette(white);
+		System.out.println("Added white to std_palette");
 
-        //Testing pallete distance & color
-//        myColor test_color = new myColor("test", 0,0,255);
-//        test_color.putColor();
-//
-//        double distance = std_palette.rgbDistance(test_color);
-//        System.out.println("Final Distance:"+"\t"+distance);
-//        System.out.println("Closest Color:");
-//        std_palette.rgbClosestColor(test_color).putColor();
+		//Adding yellow to standard palette
+		myColor yellow = new myColor("Yellow", 154,205,50);
+		std_palette.addToPalette(yellow);
+		System.out.println("Added yellow to std_palette");
+
+		//Adding orange to standard palette
+/*		myColor orange = new myColor("Orange", 255,165,0);
+		std_palette.addToPalette(orange);
+		System.out.println("Added orange to std_palette");*/
+
+			//Adding orange seems to overpower red
+
 
         ProcessImage process_img = new ProcessImage();
         BufferedImage input_image = process_img.convFileToImage(input_image_filename);
-        int[][] input_image_rgb_array = process_img.convImageToArray(input_image);
+		System.out.println("Converted file to image");
+		int[][] input_image_rgb_array = process_img.convImageToArray(input_image);
+		System.out.println("Converted image to rgbarray");
 
         /*
         We'll convert the RGB matrix to a matrix with only the Hue component
          */
-//        HSI[][] input_image_hsi_array = process_img.convRGBArrayToHSIArray(input_image_rgb_array);
-//        double[][] input_image_hue_array = process_img.convRGBToHueArray(input_image_rgb_array);
 		double[][]input_image_hue_array = process_img.convRGBToHueArray_RaviImplementation(input_image_rgb_array);
+		System.out.println("converted RGB Matrix to Hue matrix");
 
-
-        myColor[][] color_array = process_img.convRGBArrayToMyColorArray(input_image_rgb_array);
+//        myColor[][] color_array = process_img.convRGBArrayToMyColorArray(input_image_rgb_array);
 
 
         ConnectedColorComponent C = new ConnectedColorComponent();
         C.initialize(input_image_rgb_array, 50);
+		System.out.println("Initialized CCC with rgb array");
 
         //	Name pixels by labels according to nearby labels
 
         int [][] CCC_Matrix = C.labelColouredComponents(50);
+		System.out.println("Labelled CCC by labels");
+		//Outputs lavel matrix
 //        Utility.printMatrix(C.getL());
 
-        // Try initializing myColor matrix
-//		C.initializeMyColor(color_array, 50);
-//		int [][] CCC_MyColor = C.labelMyColorComponents(50);
-//		myColor[][] MyColor_LabelMatrix = C.getP_my_color();
+		LabelProcessor lp = new LabelProcessor(C.getL());
+		System.out.println("Called LabelProcessor");
 
         ColorProcessor rgb_processor = new ColorProcessor(std_palette);
         rgb_processor.listPaletteColors();

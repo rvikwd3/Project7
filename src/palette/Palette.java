@@ -31,6 +31,15 @@ class Palette {
 
 	}
 
+	void addToPalette(myColor new_color){
+    	try{
+			color_list.put(new_color.color_name, new_color);
+			color_count.put(new_color.color_name, 0);
+		}catch(Exception e){
+			System.out.println("Error occured at adding new color to HashMap");
+		}
+	}
+
     void putPalette(){
         System.out.println("Palette:");
 
