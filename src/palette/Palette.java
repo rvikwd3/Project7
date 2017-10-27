@@ -41,6 +41,19 @@ class Palette {
         }
     }
 
+    double hueDistance(double hue){
+    	double minimum_distance = Double.MAX_VALUE;
+    	double color_distance = 0;
+
+    	for(int i=0; i<color_list.length; i++){
+
+    		//Convert palette RGB to Hue
+
+		}
+
+		return 0.0;
+	}
+
     double rgbDistance(myColor input_color){
         double minimum_distance = Double.MAX_VALUE;
         double color_distance = 0;
@@ -98,6 +111,7 @@ class Palette {
         return closest_color;
     }
 
+    //Overloaded threshold closest color
     myColor rgbClosestColor(myColor input_color, int threshold){
         this.rgbDistance(input_color);
         return closest_color;

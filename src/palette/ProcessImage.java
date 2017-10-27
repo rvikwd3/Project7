@@ -90,21 +90,9 @@ public class ProcessImage {
 				green = (input_array[i][j] >> 8) & 0xff;
 				blue = (input_array[i][j]) & 0xff;
 
+				//moved rgb->hue in Utility.RGB2Hue
 
-				n=(0.5)*((red-green)+(red-blue));
-				d=Math.pow((Math.pow(red-green,2)+((red-blue)*(green-blue))),0.5);
-
-				hue_array[i][j] = Math.acos(n/(d+0.000001)) * (180/Math.PI);
-
-				//Debugging sout
-				System.out.println("\n("+i+","+j+")\nInputRGB:\t"+input_array[i][j]+"\nRed:\t"+red+"\nGreen:\t"+green+"\nBlue:\t"+blue+"\nn:\t"+n+"\nd:\t"+d+"\nacosd:\t"+hue_array[i][j]);
-
-				if(blue>green) {
-					System.out.println("\t\t\t\t\t\t\t\tBlue>Green");
-					hue_array[i][j] = 360 - hue_array[i][j];
-				}
-
-				hue_array[i][j] = hue_array[i][j] / 360.0;
+				hue_array[i][j] = Utility.rgb2hue(red, green, blue);
 
 				//Debugging sout
 				System.out.println("Final Hue Array:\t"+hue_array[i][j]);
