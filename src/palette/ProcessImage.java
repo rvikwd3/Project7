@@ -148,12 +148,12 @@ public class ProcessImage {
 				}
 
 				//Debugging sout
-				System.out.println("\n("+i+","+j+")\nInputRGB:\t"+input_array[i][j]+"\nRed:\t"+red+"\nGreen:\t"+green+"\nBlue:\t"+blue+"\ndelta:\t"+delta+"\nval_max:\t"+val_max+"\nacosd:\t"+hue_array[i][j]);
+//				System.out.println("\n("+i+","+j+")\nInputRGB:\t"+input_array[i][j]+"\nRed:\t"+red+"\nGreen:\t"+green+"\nBlue:\t"+blue+"\ndelta:\t"+delta+"\nval_max:\t"+val_max+"\nacosd:\t"+hue_array[i][j]);
 
 				hue_array[i][j] *= 60.0;
 
 				//Debugging sout
-				System.out.println("Final Hue Array:\t"+hue_array[i][j]);
+//				System.out.println("Final Hue Array:\t"+hue_array[i][j]);
 
 			}
 		}

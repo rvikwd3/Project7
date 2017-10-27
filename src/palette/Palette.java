@@ -43,15 +43,27 @@ class Palette {
 
     double hueDistance(double hue){
     	double minimum_distance = Double.MAX_VALUE;
-    	double color_distance = 0;
+    	double hue_distance = 0;
+    	double palette_color_hue = 0;
 
     	for(int i=0; i<color_list.length; i++){
 
-    		//Convert palette RGB to Hue
+    		//Convert palette RGB color to Hue
+			palette_color_hue = Utility.rgb2hue((double)color_list[i].red, (double)color_list[i].green, (double)color_list[i].blue);
+
+			//Compute absolute distance between palette color & input hue
+			hue_distance = (hue > palette_color_hue)?(hue-palette_color_hue):(palette_color_hue-hue);
+
+			//If distance is least then keep it as new minimum distance
+			if(hue_distance < minimum_distance){
+				minimum_distance = hue_distance;
+				closest_color = color_list[i];
+			}
+
 
 		}
 
-		return 0.0;
+		return minimum_distance;
 	}
 
     double rgbDistance(myColor input_color){
@@ -102,6 +114,20 @@ class Palette {
         }
     }
 
+
+    myColor hueClosestColor(double hue){
+		//Run hueDistance to re-calculate distance
+		//read global closest_color and return that
+    	this.hueDistance(hue);
+    	return closest_color;
+	}
+
+	myColor hueClosestColor(double hue, int threshold){
+		//Run hueDistance to re-calculate distance
+		//read global closest_color and return that
+		this.hueDistance(hue);
+		return closest_color;
+	}
 
     myColor rgbClosestColor(myColor input_color){
         //Run rgbDistance to re-calculate distance

@@ -9,6 +9,8 @@ public class Main{
         String input_image_filename = args[0];
 
         Palette std_palette = new Palette();
+
+        myColor white = new myColor("white", 255, 255, 255);
         //std_palette.putPalette();
 
         //Testing pallete distance & color
@@ -57,7 +59,13 @@ public class Main{
 
 //        rgb_processor.listClosestPaletteColors(color_array, std_palette, 50);
 //        std_palette.putColorCountTable();
+        rgb_processor.listClosestPaletteColors(input_image_hue_array, std_palette, 50);
+        std_palette.putColorCountTable();
 
+        //Checking radians vs degrees
+//		double pi;
+//		pi = Math.atan(1)*4;
+//        System.out.println("pi"+pi+"\tcos(pi)"+Math.cos(pi));
 
         System.out.println("End Main");
     }
