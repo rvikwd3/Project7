@@ -31,39 +31,8 @@ class Palette {
 
 	}
 
-	//Old color_list array version
-/*    Palette() {
-        System.out.println("Initializing standard palette");
-
-        //Set the color_count array to 0
-        for(int i=0; i<color_count.length; i++){color_count[i]=0;};
-
-        // We'll set the standard RGB Colors
-        palette.myColor color_red = new palette.myColor("red", 255, 0, 0);
-        palette.myColor color_green = new palette.myColor("green", 0, 255, 0);
-        palette.myColor color_blue = new palette.myColor("blue", 0, 0, 255);
-
-        //Explicit RGB palette initialization
-//        color_red.getColorName("Red");
-//        color_green.getColorName("Green");
-//        color_blue.getColorName("Blue");
-//
-//        color_red.getColors(255, 0, 0);
-//        color_green.getColors(0, 255, 0);
-//        color_blue.getColors(0, 0, 255);
-
-        color_list[0] = color_red;
-        color_list[1] = color_green;
-        color_list[2] = color_blue;
-    }*/
-
     void putPalette(){
         System.out.println("Palette:");
-
-        //Old color_list array
-/*        for(int i=0; i<color_list.length; i++){
-            color_list[i].putColor();
-        }*/
 
 		for(String key : color_list.keySet()){
 			color_list.get(key).putColor();
@@ -181,13 +150,6 @@ class Palette {
     }
 
     void incrementColorCount(String inc_color_name){
-    	//Old color_count array
-/*        for(int i=0; i<color_list.length; i++){
-            if(color_list[i].color_name.equals(inc_color_name)){
-                color_count[i]++;
-            }
-        }*/
-
 		//New hashmap version
 		for(String key : color_list.keySet()){
 			if(key.equals(inc_color_name)){
@@ -197,13 +159,6 @@ class Palette {
     }
 
     void decrementColorCount(String inc_color_name){
-    	//Old color_count array version
-/*        for(int i=0; i<color_list.length; i++){
-            if(color_list[i].color_name.equals(inc_color_name)){
-                color_count[i]--;
-            }
-        }*/
-
 		//New hashmap version
 		for(String key : color_list.keySet()){
 			if(key.equals(inc_color_name)){
