@@ -21,7 +21,7 @@ public class ColorProcessor {
 
     void listClosestPaletteColors(double[][] hue_array, Palette palette, int threshold){
 
-    	//Reset color_count array and closest_color
+    	//Reset rgb_color_count array and closest_color
 		palette.resetClosestColor();
 
 		for(int i=0; i<hue_array.length; i++){
@@ -39,7 +39,7 @@ public class ColorProcessor {
 
     void listClosestPaletteColors(myColor[][] color_array, Palette palette, int threshold){
 
-        //Need to reset color_count array and closest_color in case this is called more than once
+        //Need to reset rgb_color_count array and closest_color in case this is called more than once
         palette.resetClosestColor();
 
         for(int i=0; i<color_array.length; i++){

@@ -11,19 +11,33 @@ public class Main{
         Palette std_palette = new Palette();
 
         //Adding white to standard palette
-        myColor white = new myColor("White", 255, 255, 255);
+/*        myColor white = new myColor("White", 255, 255, 255);
         std_palette.addToPalette(white);
-		System.out.println("Added white to std_palette");
+		System.out.println("Added white to std_palette");*/
 
 		//Adding yellow to standard palette
-		myColor yellow = new myColor("Yellow", 154,205,50);
-		std_palette.addToPalette(yellow);
+		myColor yellow1 = new myColor("DarkYellow", 128, 128, 0);
+		std_palette.addToPalette(yellow1);
 		System.out.println("Added yellow to std_palette");
 
+		System.out.println(Utility.rgb2hue(128, 128, 0));
+
+		myColor yellow2 = new myColor("LightYellow", 255, 255, 224);
+		std_palette.addToPalette(yellow2);
+		System.out.println("Added yellow to std_palette");
+
+		System.out.println(Utility.rgb2hue(255,255, 224));
+
+		System.out.println("Added dark orange to std_palette");
+		System.out.println(Utility.rgb2hue(77, 50, 0));
+
+
+
 		//Adding orange to standard palette
-/*		myColor orange = new myColor("Orange", 255,165,0);
+		myColor orange = new myColor("Orange", 255,165,0);
 		std_palette.addToPalette(orange);
-		System.out.println("Added orange to std_palette");*/
+		System.out.println("Added myorange to std_palette");
+		System.out.println(Utility.rgb2hue(255, 165, 0));
 
 			//Adding orange seems to overpower red
 
